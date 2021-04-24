@@ -1,21 +1,16 @@
 package net.volcano.jdautils;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
-public class Pair<T, E> {
+@Data
+@AllArgsConstructor
+public class Pair<FIRST, SECOND> {
 	
-	private T first;
-	private E second;
+	private FIRST first;
+	private SECOND second;
 	
-	public Pair(T first, E second) {
-		this.first = first;
-		this.second = second;
-	}
-	
-	public static <F, S> Pair<F, S> with(F first, S second) {
+	public static <FIRST, SECOND> Pair<FIRST, SECOND> with(FIRST first, SECOND second) {
 		return new Pair<>(first, second);
 	}
 	
