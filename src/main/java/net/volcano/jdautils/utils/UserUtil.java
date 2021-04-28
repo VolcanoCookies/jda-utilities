@@ -172,4 +172,8 @@ public class UserUtil {
 		return user.getAsTag() + " [" + user.getId() + "]";
 	}
 	
+	public static String format(Member member) {
+		return format(member.getUser());
+	}
+	
 }
