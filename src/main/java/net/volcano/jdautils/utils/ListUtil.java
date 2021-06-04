@@ -35,7 +35,7 @@ public class ListUtil {
 	 * @param maxLength the max length of one string
 	 * @return A list of strings
 	 */
-	public static <T> List<String> asString(String separator, Collection<T> list, Function<T, String> function, int maxLength) {
+	public static <T> List<String> asString(String separator, Collection<T> list, int maxLength, Function<T, String> function) {
 		List<String> output = new ArrayList<>();
 		List<String> stringList = list.stream().map(function).collect(Collectors.toList());
 		StringBuilder stringBuilder = new StringBuilder();
