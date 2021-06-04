@@ -52,4 +52,14 @@ public class StringUtil {
 		return content.length() > maxLength ? content.substring(0, maxLength - 1) : content;
 	}
 	
+	public static String capitalize(String content) {
+		if (content.isEmpty()) {
+			return content;
+		} else if (content.length() == 1) {
+			return content.toUpperCase();
+		} else {
+			return content.substring(0, 1).toUpperCase() + content.substring(1).toLowerCase();
+		}
+	}
+	
 }
