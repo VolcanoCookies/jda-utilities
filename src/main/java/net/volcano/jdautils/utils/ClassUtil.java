@@ -9,4 +9,12 @@ public class ClassUtil {
 		return ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 	
+	public static Class<?> stripWildcard(Class<?> clazz) {
+		try {
+			return (Class<?>) ((ParameterizedType) clazz.getGenericSuperclass()).getRawType();
+		} catch (Exception e) {
+			return clazz;
+		}
+	}
+	
 }
