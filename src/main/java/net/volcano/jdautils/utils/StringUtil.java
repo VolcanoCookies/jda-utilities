@@ -58,7 +58,7 @@ public class StringUtil {
 		} else if (content.length() == 1) {
 			return content.toUpperCase();
 		} else {
-			return content.substring(0, 1).toUpperCase() + content.substring(1).toLowerCase();
+			return content.substring(0, 1).toUpperCase() + content.substring(1);
 		}
 	}
 	
