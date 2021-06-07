@@ -62,4 +62,8 @@ public class StringUtil {
 		}
 	}
 	
+	public static String cameCaseToSpaces(String content) {
+		return content.replaceAll("([A-Z])", " $1").trim();
+	}
+	
 }
