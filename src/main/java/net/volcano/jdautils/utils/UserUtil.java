@@ -112,21 +112,43 @@ public class UserUtil {
 				// Can't have a better match than 100%, so return
 				if (username.equalsIgnoreCase(query)) {
 					return member.getUser();
-				}
-				double percentage = (double) query.length() / (double) username.length();
-				if (username.toLowerCase().startsWith(query)) {
-					if (percentage > startMatchPercent) {
-						bestGuess = member;
-						matchedStart = true;
-						startMatchPercent = percentage;
+				} else {
+					double percentage = (double) query.length() / (double) username.length();
+					if (username.toLowerCase().startsWith(query)) {
+						if (percentage > startMatchPercent) {
+							bestGuess = member;
+							matchedStart = true;
+							startMatchPercent = percentage;
+						}
+					} else if (!matchedStart && username.toLowerCase().contains(query)) {
+						if (percentage > middleMatchPercent) {
+							bestGuess = member;
+							middleMatchPercent = percentage;
+						}
 					}
-				} else if (!matchedStart && username.toLowerCase().contains(query)) {
-					if (percentage > middleMatchPercent) {
-						bestGuess = member;
-						middleMatchPercent = percentage;
+				}
+
+				// Try tag
+				String tag = member.getUser().getAsTag();
+				// Can't have a better match than 100%, so return
+				if (tag.equalsIgnoreCase(query)) {
+					return member.getUser();
+				} else {
+					double percentage = (double) query.length() / (double) tag.length();
+					if (tag.toLowerCase().startsWith(query)) {
+						if (percentage > startMatchPercent) {
+							bestGuess = member;
+							matchedStart = true;
+							startMatchPercent = percentage;
+						}
+					} else if (!matchedStart && tag.toLowerCase().contains(query)) {
+						if (percentage > middleMatchPercent) {
+							bestGuess = member;
+							middleMatchPercent = percentage;
+						}
 					}
 				}
-				
+
 			}
 			
 			if (bestGuess != null) {
