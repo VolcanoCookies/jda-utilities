@@ -22,10 +22,13 @@ object TimeUtil {
 		return simpleDateFormat.format(Date.from(Instant.ofEpochMilli(epoch!!)))
 	}
 
+	const val DATE_TIME_REGEX: String =
+		"(\\d{4})(?:-(\\d{1,2})(?:-(\\d{1,2})(?: ?(\\d{1,2})(?::(\\d{1,2})(?::(\\d{1,2}))?)?)?)?)?"
+
 	fun getDateTimeFromString(input: String): OffsetDateTime {
 
 		val dateTimeRegex =
-			Regex("(\\d{4})(?:-(\\d{1,2})(?:-(\\d{1,2})(?: ?(\\d{1,2})(?::(\\d{1,2})(?::(\\d{1,2}))?)?)?)?)?")
+			Regex(DATE_TIME_REGEX)
 
 		val res =
 			dateTimeRegex.find(input) ?: throw InvalidDateTimeFormatException(
