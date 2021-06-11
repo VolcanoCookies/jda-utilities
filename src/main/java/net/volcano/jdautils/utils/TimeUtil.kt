@@ -21,6 +21,49 @@ object TimeUtil {
 		return simpleDateFormat.format(Date.from(Instant.ofEpochMilli(epoch!!)))
 	}
 
+	fun format(duration: Duration): String {
+
+		val d = Duration.ofNanos(duration.toNanos())
+		var s = ""
+
+		val years = d.seconds / ChronoUnit.YEARS.duration.seconds
+		val months = d.seconds / ChronoUnit.MONTHS.duration.seconds
+		val days = d.toDays()
+		val hours = d.toHours()
+		val minutes = d.toMinutes()
+		val seconds = d.toSeconds()
+
+		val arr = arrayOf(years, months, days, hours, minutes, seconds)
+
+		var i = 0
+		for (l in arr) {
+			if (l != 0L)
+				break
+			else
+				i++
+		}
+
+		while (i < arr.size) {
+			s += when (i) {
+				0 -> "year"
+				1 -> "month"
+				2 -> "day"
+				3 -> "hour"
+				4 -> "minute"
+				5 -> "second"
+				else -> throw IllegalArgumentException("i in format(duration) cannot be > arr.size")
+			}
+			if (arr[i] > 1)
+				s += "s"
+			s += " ${arr[i]}"
+			if (i < 5)
+				s += ", "
+		}
+
+		return s
+
+	}
+
 	@Language("regexp")
 	const val DATE_TIME_REGEX: String =
 		"(\\d{4})(?:-(\\d{1,2})(?:-(\\d{1,2})(?: ?(\\d{1,2})(?::(\\d{1,2})(?::(\\d{1,2}))?)?)?)?)?"
@@ -117,7 +160,7 @@ object TimeUtil {
 
 	@Language("regexp")
 	const val DURATION_TIME_REGEX: String =
-		"(?:(\\d{1,32}) ?y(?:ears?)?)? ?(?:(\\d{1,32}) ?mo(?:nths?)?)? ?(?:(\\d{1,32}) ?d(?:ays?)?)? ?(?:(\\d{1,32}) ?h(?:ours?)?)? ?(?:(\\d{1,32}) ?mi(?:nutes?)?)? ?(?:(\\d{1,32}) ?s(?:econds?)?)?"
+		"(?:(\\d{1,32}) ?y(?:ears?)?)? ?(?:(\\d{1,32}) ?(?:mo(?:nths?|[nsh])?|mth))? ?(?:(\\d{1,32}) ?d(?:ays?)?)? ?(?:(\\d{1,32}) ?h(?:our|r)?s?)? ?(?:(\\d{1,32}) ?mi(?:nutes?|n)?)? ?(?:(\\d{1,32}) ?s(?:ec(?:onds?)?)?)?"
 
 	fun getTimeDurationFromString(input: String): Duration {
 
