@@ -12,6 +12,7 @@ object StringUtil {
 	 * @param split     The string to try and split at
 	 * @return A list of strings in order
 	 */
+	@JvmStatic
 	fun splitAt(content: String, maxLength: Int, split: String): List<String> {
 		val strings: MutableList<String> = ArrayList()
 		var stringBuilder = StringBuilder()
@@ -36,10 +37,12 @@ object StringUtil {
 		return strings
 	}
 
+	@JvmStatic
 	fun trim(content: String, maxLength: Int): String {
 		return if (content.length > maxLength) content.substring(0, maxLength - 1) else content
 	}
 
+	@JvmStatic
 	fun capitalize(content: String): String {
 		return when {
 			content.isEmpty() -> {
@@ -54,12 +57,14 @@ object StringUtil {
 		}
 	}
 
+	@JvmStatic
 	fun cameCaseToSpaces(content: String): String {
 		return content.replace("([A-Z])".toRegex(), " $1").trim { it <= ' ' }
 	}
 
 	val TOKEN_REGEX = "\"[^\"]+\"|'[^']+'|\\S+"
 
+	@JvmStatic
 	fun tokenize(content: String, removeQuotes: Boolean = true): List<String> {
 
 		val regex =

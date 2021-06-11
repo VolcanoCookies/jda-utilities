@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Member
 
 object MemberUtil {
 
+	@JvmStatic
 	fun sortToMemberList(members: List<Member>): List<Member> {
 
 		return members.sortedWith(
@@ -12,6 +13,7 @@ object MemberUtil {
 
 	}
 
+	@JvmStatic
 	fun format(member: Member): String {
 		return "${member.effectiveName} [${member.id}]"
 	}

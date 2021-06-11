@@ -9,18 +9,23 @@ import java.util.*
 object TimeUtil {
 
 	private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+	@JvmStatic
 	fun format(instant: Instant?): String {
 		return simpleDateFormat.format(Date.from(instant))
 	}
 
+	@JvmStatic
 	fun format(dateTime: OffsetDateTime): String {
 		return format(dateTime.toInstant())
 	}
 
+	@JvmStatic
 	fun formatEpoch(epoch: Long?): String {
 		return simpleDateFormat.format(Date.from(Instant.ofEpochMilli(epoch!!)))
 	}
 
+	@JvmStatic
 	fun format(duration: Duration): String {
 
 		val d = Duration.ofNanos(duration.toNanos())
@@ -68,6 +73,7 @@ object TimeUtil {
 	const val DATE_TIME_REGEX: String =
 		"(\\d{4})(?:-(\\d{1,2})(?:-(\\d{1,2})(?: ?(\\d{1,2})(?::(\\d{1,2})(?::(\\d{1,2}))?)?)?)?)?"
 
+	@JvmStatic
 	fun getDateTimeFromString(input: String): OffsetDateTime {
 
 		val dateTimeRegex =
@@ -162,6 +168,7 @@ object TimeUtil {
 	const val DURATION_TIME_REGEX: String =
 		"(?:(\\d{1,32}) ?y(?:ears?)?)? ?(?:(\\d{1,32}) ?(?:mo(?:nths?|[nsh])?|mth))? ?(?:(\\d{1,32}) ?d(?:ays?)?)? ?(?:(\\d{1,32}) ?h(?:our|r)?s?)? ?(?:(\\d{1,32}) ?mi(?:nutes?|n)?)? ?(?:(\\d{1,32}) ?s(?:ec(?:onds?)?)?)?"
 
+	@JvmStatic
 	fun getTimeDurationFromString(input: String): Duration {
 
 		val res =
