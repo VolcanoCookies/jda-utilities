@@ -1,10 +1,9 @@
 package net.volcano.jdautils.utils
 
+import org.intellij.lang.annotations.Language
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.YearMonth
-import java.time.ZoneOffset
+import java.time.*
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 object TimeUtil {
@@ -22,6 +21,7 @@ object TimeUtil {
 		return simpleDateFormat.format(Date.from(Instant.ofEpochMilli(epoch!!)))
 	}
 
+	@Language("regexp")
 	const val DATE_TIME_REGEX: String =
 		"(\\d{4})(?:-(\\d{1,2})(?:-(\\d{1,2})(?: ?(\\d{1,2})(?::(\\d{1,2})(?::(\\d{1,2}))?)?)?)?)?"
 
@@ -114,5 +114,39 @@ object TimeUtil {
 		val errorLength: Int,
 		val hint: String
 	) : Exception()
+
+	@Language("regexp")
+	const val DURATION_TIME_REGEX: String =
+		"(?:(\\d{1,32}) ?y(?:ears?)?)? ?(?:(\\d{1,32}) ?mo(?:nths?)?)? ?(?:(\\d{1,32}) ?d(?:ays?)?)? ?(?:(\\d{1,32}) ?h(?:ours?)?)? ?(?:(\\d{1,32}) ?mi(?:nutes?)?)? ?(?:(\\d{1,32}) ?s(?:econds?)?)?"
+
+	fun getTimeDurationFromString(input: String): Duration {
+
+		val res =
+			Regex(DATE_TIME_REGEX).matchEntire(input) ?: throw InvalidTimeDurationFormatException()
+
+		val years = res.groups[1]?.value?.toLong()
+		val months = res.groups[2]?.value?.toLong()
+		val days = res.groups[3]?.value?.toLong()
+		val hours = res.groups[4]?.value?.toLong()
+		val minutes = res.groups[5]?.value?.toLong()
+		val seconds = res.groups[6]?.value?.toLong()
+
+		if (years == null && months == null && days == null && hours == null && minutes == null && seconds == null) {
+			throw InvalidTimeDurationFormatException()
+		}
+
+		val duration = Duration.ZERO
+		years?.let { duration.plus(it, ChronoUnit.YEARS) }
+		months?.let { duration.plus(it, ChronoUnit.MONTHS) }
+		days?.let { duration.plusDays(it) }
+		hours?.let { duration.plusHours(it) }
+		minutes?.let { duration.plusMinutes(it) }
+		seconds?.let { duration.plusSeconds(it) }
+
+		return duration
+
+	}
+
+	class InvalidTimeDurationFormatException : Exception()
 
 }
