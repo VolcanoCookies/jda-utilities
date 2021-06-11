@@ -12,4 +12,8 @@ object MemberUtil {
 
 	}
 
+	fun format(member: Member): String {
+		return "${member.effectiveName} [${member.id}]"
+	}
+
 }
