@@ -40,6 +40,6 @@ public class EmbedLimit {
 	/**
 	 * Max length of a embed description
 	 */
-	public static final int EMBED_DESCRIPTION_LIMIT = 2048;
+	public static final int EMBED_DESCRIPTION_LIMIT = 4096;
 	
 }
