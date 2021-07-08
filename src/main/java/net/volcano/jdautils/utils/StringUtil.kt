@@ -79,4 +79,14 @@ object StringUtil {
 
 	}
 
+	@JvmStatic
+	fun plural(content: String, amount: Int): String {
+		return if (content.endsWith("s")) {
+			if (amount == 1) content.substring(0, content.length - 1) else content
+		} else {
+			if (amount == 1) content else content + "s"
+		}
+
+	}
+
 }
