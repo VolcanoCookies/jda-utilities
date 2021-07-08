@@ -136,7 +136,7 @@ object TimeUtil {
 				it.toInt() > 59 -> throw InvalidDateTimeFormatException(
 					startOffset,
 					0,
-					"Hour cannot be greater than 59."
+					"Minute cannot be greater than 59."
 				)
 				else -> it.toInt()
 			}
