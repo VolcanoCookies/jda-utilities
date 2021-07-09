@@ -89,4 +89,9 @@ object StringUtil {
 
 	}
 
+	@JvmStatic
+	fun plural(content: String, l: Collection<*>): String {
+		return plural(content, l.size)
+	}
+
 }
