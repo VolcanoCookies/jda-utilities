@@ -1,44 +1,20 @@
-package net.volcano.jdautils.utils;
+package net.volcano.jdautils.utils
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
+import java.util.concurrent.CompletableFuture
+import java.util.stream.Collectors
+import java.lang.InterruptedException
+import java.util.concurrent.ExecutionException
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.entities.User
+import net.volcano.jdautils.utils.UserUtil
+import java.util.*
+import java.util.regex.Pattern
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+object UserUtil {
 
-public class UserUtil {
-	
-	public static String getUserString(User user) {
-		return user.getAsTag() + " [" + user.getId() + "] " + user.getAsMention();
-	}
-	
-	public static Set<Role> getAllRoles(User user) {
-		var futures = user.getMutualGuilds()
-				.stream()
-				.map(g -> g.retrieveMember(user).submit())
-				.collect(Collectors.toList());
-		var list = new ArrayList<Member>();
-		for (CompletableFuture<Member> future : futures) {
-			try {
-				list.add(future.get());
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
-		}
-		return list.stream()
-				.flatMap(member -> member.getRoles().stream())
-				.collect(Collectors.toSet());
-	}
-	
 	/**
 	 * Find a user
 	 * If ran in a guild, will only look at users in that guild
@@ -46,156 +22,151 @@ public class UserUtil {
 	 * @param query the query to find by
 	 * @return the best match, or null if none found
 	 */
-	@Nullable
-	public static User findUser(String query, JDA jda, @Nullable Guild guild) {
-		
-		if (query == null) {
-			return null;
-		}
-		
-		query = query.trim();
-		
+	@JvmStatic
+	fun findUser(query: String?, jda: JDA, guild: Guild?): User? {
+		var query = query ?: return null
+		query = query.trim { it <= ' ' }
+
 		// Return the first occurrence of a mention
-		Matcher matcher = Pattern.compile("<@(\\d+)>", Pattern.CASE_INSENSITIVE).matcher(query);
+		val matcher = Pattern.compile("<@(\\d+)>", Pattern.CASE_INSENSITIVE).matcher(query)
 		if (matcher.matches()) {
 			try {
 				return jda.retrieveUserById(matcher.group(1))
-						.submit()
-						.get();
-			} catch (InterruptedException | ExecutionException ignored) {
+					.submit()
+					.get()
+			} catch (ignored: InterruptedException) {
+			} catch (ignored: ExecutionException) {
 			}
 		}
-		
+
 		// Try getting a user from the pure discord id if its numerical
-		if (query.matches("\\d+")) {
+		if (query.matches(Regex("\\d+"))) {
 			try {
 				return jda.retrieveUserById(query)
-						.submit()
-						.get();
-			} catch (InterruptedException | ExecutionException ignored) {
+					.submit()
+					.get()
+			} catch (ignored: InterruptedException) {
+			} catch (ignored: ExecutionException) {
 			}
 		}
-		
-		boolean matchedStart = false;
-		double startMatchPercent = 0, middleMatchPercent = 0;
-		
-		if (guild != null) {
-			
-			Member bestGuess = null;
-			
-			for (Member member : guild.getMembers()) {
-				
+		var matchedStart = false
+		var startMatchPercent = 0.0
+		var middleMatchPercent = 0.0
+		return if (guild != null) {
+			var bestGuess: Member? = null
+			for (member in guild.members) {
+
 				// Try matching whole nickname
-				String nickname = member.getNickname();
+				val nickname = member.nickname
 				if (nickname != null) {
 					// Can't have a better match than 100%, so return
-					if (nickname.equalsIgnoreCase(query)) {
-						return member.getUser();
+					if (nickname.equals(query, ignoreCase = true)) {
+						return member.user
 					}
-					double percentage = (double) query.length() / (double) nickname.length();
-					if (nickname.toLowerCase().startsWith(query)) {
+					val percentage = query.length.toDouble() / nickname.length.toDouble()
+					if (nickname.lowercase(Locale.getDefault()).startsWith(query)) {
 						if (percentage > startMatchPercent) {
-							bestGuess = member;
-							matchedStart = true;
-							startMatchPercent = percentage;
+							bestGuess = member
+							matchedStart = true
+							startMatchPercent = percentage
 						}
-					} else if (!matchedStart && nickname.toLowerCase().contains(query)) {
+					} else if (!matchedStart && nickname.lowercase(Locale.getDefault()).contains(query)) {
 						if (percentage > middleMatchPercent) {
-							bestGuess = member;
-							middleMatchPercent = percentage;
+							bestGuess = member
+							middleMatchPercent = percentage
 						}
 					}
 				}
-				
+
 				// Try username
-				String username = member.getUser().getName();
+				val username = member.user.name
 				// Can't have a better match than 100%, so return
-				if (username.equalsIgnoreCase(query)) {
-					return member.getUser();
+				if (username.equals(query, ignoreCase = true)) {
+					return member.user
 				} else {
-					double percentage = (double) query.length() / (double) username.length();
-					if (username.toLowerCase().startsWith(query)) {
+					val percentage = query.length.toDouble() / username.length.toDouble()
+					if (username.lowercase(Locale.getDefault()).startsWith(query)) {
 						if (percentage > startMatchPercent) {
-							bestGuess = member;
-							matchedStart = true;
-							startMatchPercent = percentage;
+							bestGuess = member
+							matchedStart = true
+							startMatchPercent = percentage
 						}
-					} else if (!matchedStart && username.toLowerCase().contains(query)) {
+					} else if (!matchedStart && username.lowercase(Locale.getDefault()).contains(query)) {
 						if (percentage > middleMatchPercent) {
-							bestGuess = member;
-							middleMatchPercent = percentage;
+							bestGuess = member
+							middleMatchPercent = percentage
 						}
 					}
 				}
 
 				// Try tag
-				String tag = member.getUser().getAsTag();
+				val tag = member.user.asTag
 				// Can't have a better match than 100%, so return
-				if (tag.equalsIgnoreCase(query)) {
-					return member.getUser();
+				if (tag.equals(query, ignoreCase = true)) {
+					return member.user
 				} else {
-					double percentage = (double) query.length() / (double) tag.length();
-					if (tag.toLowerCase().startsWith(query)) {
+					val percentage = query.length.toDouble() / tag.length.toDouble()
+					if (tag.lowercase(Locale.getDefault()).startsWith(query)) {
 						if (percentage > startMatchPercent) {
-							bestGuess = member;
-							matchedStart = true;
-							startMatchPercent = percentage;
+							bestGuess = member
+							matchedStart = true
+							startMatchPercent = percentage
 						}
-					} else if (!matchedStart && tag.toLowerCase().contains(query)) {
+					} else if (!matchedStart && tag.lowercase(Locale.getDefault()).contains(query)) {
 						if (percentage > middleMatchPercent) {
-							bestGuess = member;
-							middleMatchPercent = percentage;
+							bestGuess = member
+							middleMatchPercent = percentage
 						}
 					}
 				}
-
 			}
-			
-			if (bestGuess != null) {
-				return bestGuess.getUser();
-			} else {
-				return null;
-			}
-			
+			bestGuess?.user
 		} else {
-			
-			User bestGuess = null;
-			
-			for (User user : jda.getUserCache()) {
-				
+			var bestGuess: User? = null
+			for (user in jda.userCache) {
+
 				// Try username
-				String username = user.getName();
+				val username = user.name
 				// Can't have a better match than 100%, so return
-				if (username.equalsIgnoreCase(query)) {
-					return user;
+				if (username.equals(query, ignoreCase = true)) {
+					return user
 				}
-				double percentage = (double) query.length() / (double) username.length();
-				if (username.toLowerCase().startsWith(query)) {
+				val percentage = query.length.toDouble() / username.length.toDouble()
+				if (username.lowercase(Locale.getDefault()).startsWith(query)) {
 					if (percentage > startMatchPercent) {
-						bestGuess = user;
-						matchedStart = true;
-						startMatchPercent = percentage;
+						bestGuess = user
+						matchedStart = true
+						startMatchPercent = percentage
 					}
-				} else if (!matchedStart && username.toLowerCase().contains(query)) {
+				} else if (!matchedStart && username.lowercase(Locale.getDefault()).contains(query)) {
 					if (percentage > middleMatchPercent) {
-						bestGuess = user;
-						middleMatchPercent = percentage;
+						bestGuess = user
+						middleMatchPercent = percentage
 					}
 				}
-				
 			}
-			
-			return bestGuess;
-			
+			bestGuess
 		}
 	}
-	
-	public static String format(User user) {
-		return user.getAsTag() + " [" + user.getId() + "]";
+
+}
+
+fun User.format(): String {
+	return "${this.asTag} [${this.id}]"
+}
+
+fun User.fullString() : String {
+	return "${this.asTag} [${this.id}] ${this.asMention}"
+}
+
+val User.roles: List<Role>
+	get() {
+		return this.mutualGuilds.mapNotNull { it.getMember(this) }
+			.flatMap { it.roles }
 	}
-	
-	public static String format(Member member) {
-		return format(member.getUser());
+
+fun User.retrieveRoles() : List<Role> {
+	return this.mutualGuilds.flatMap {
+		it.retrieveMember(this).submit().get().roles
 	}
-	
 }

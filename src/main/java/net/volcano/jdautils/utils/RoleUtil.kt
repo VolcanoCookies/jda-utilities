@@ -8,51 +8,6 @@ import net.dv8tion.jda.api.entities.Role
 object RoleUtil {
 
 	@JvmStatic
-	fun getRoleString(role: Role): String {
-		return role.name + "[" + role.id + "] from server " + role.guild.name + " [" + role.guild.id + "]"
-	}
-
-	@JvmStatic
-	fun format(role: Role, forGuild: Guild, useMention: Boolean = true, noId: Boolean = false): String {
-		return if (role.guild.idLong == forGuild.idLong) {
-			if (useMention) {
-				role.asMention + " from this guild"
-			} else {
-				if (noId) {
-					"${role.name} from this guild"
-				} else {
-					"${role.name} [${role.id}] from this guild"
-				}
-			}
-		} else {
-			if (noId) {
-				"${role.name} from ${role.guild.name}"
-			} else {
-				"${role.name} [${role.id}] from ${role.guild.name} [${role.guild.id}]"
-			}
-		}
-	}
-
-	@JvmStatic
-	fun formatForServerWithId(role: Role, guild: Guild?): String {
-		return if (guild != null && role.guild.idLong == guild.idLong) {
-			String.format(
-				"%1\$s[%2\$s]",
-				role.asMention,
-				role.id
-			)
-		} else {
-			String.format(
-				"%1\$s[%2\$s] from %3\$s[%4\$s]",
-				role.name,
-				role.id,
-				role.guild.name,
-				role.guild.id
-			)
-		}
-	}
-
-	@JvmStatic
 	fun findRole(query: String?, jda: JDA, guild: Guild?): Role? {
 		var query = query ?: return null
 		query = query.trim { it <= ' ' }
@@ -93,9 +48,34 @@ object RoleUtil {
 		}
 		return bestGuess
 	}
-	
-	@JvmStatic
-	fun getMembers(role: Role): List<Member> {
-		return role.guild.getMembersWithRoles(role)
+
+}
+
+fun Role.getFullString(): String {
+	return "${this.name} [${this.id}] from ${this.guild.name} [${this.guild.id}]"
+}
+
+fun Role.format(forGuild: Guild = this.guild, useMention: Boolean = true, noId: Boolean = false): String {
+	return if (this.guild.idLong == forGuild.idLong) {
+		if (useMention) {
+			this.asMention + " from this guild"
+		} else {
+			if (noId) {
+				"${this.name} from this guild"
+			} else {
+				"${this.name} [${this.id}] from this guild"
+			}
+		}
+	} else {
+		if (noId) {
+			"${this.name} from ${this.guild.name}"
+		} else {
+			"${this.name} [${this.id}] from ${this.guild.name} [${this.guild.id}]"
+		}
 	}
 }
+
+val Role.members: List<Member>
+	get() {
+		return this.guild.getMembersWithRoles(this)
+	}

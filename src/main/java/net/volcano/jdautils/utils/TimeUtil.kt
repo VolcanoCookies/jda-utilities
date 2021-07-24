@@ -6,68 +6,64 @@ import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 
+val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+fun Instant.format():String {
+	return simpleDateFormat.format(Date.from(this))
+}
+
+fun OffsetDateTime.format(): String{
+	return this.toInstant().format()
+}
+
+fun Duration.format(): String {
+	val d = Duration.ofNanos(this.toNanos())
+	var s = ""
+
+	val years = d.seconds / ChronoUnit.YEARS.duration.seconds
+	val months = d.seconds / ChronoUnit.MONTHS.duration.seconds
+	val days = d.toDays()
+	val hours = d.toHours()
+	val minutes = d.toMinutes()
+	val seconds = d.toSeconds()
+
+	val arr = arrayOf(years, months, days, hours, minutes, seconds)
+
+	var i = 0
+	for (l in arr) {
+		if (l != 0L)
+			break
+		else
+			i++
+	}
+
+	while (i < arr.size) {
+		s += when (i) {
+			0 -> "year"
+			1 -> "month"
+			2 -> "day"
+			3 -> "hour"
+			4 -> "minute"
+			5 -> "second"
+			else -> throw IllegalArgumentException("i in format(duration) cannot be > arr.size")
+		}
+		if (arr[i] > 1)
+			s += "s"
+		s += " ${arr[i]}"
+		if (i < 5)
+			s += ", "
+	}
+
+	return s
+}
+
 object TimeUtil {
-
-	private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-
-	@JvmStatic
-	fun format(instant: Instant?): String {
-		return simpleDateFormat.format(Date.from(instant))
-	}
-
-	@JvmStatic
-	fun format(dateTime: OffsetDateTime): String {
-		return format(dateTime.toInstant())
-	}
 
 	@JvmStatic
 	fun formatEpoch(epoch: Long?): String {
 		return simpleDateFormat.format(Date.from(Instant.ofEpochMilli(epoch!!)))
 	}
 
-	@JvmStatic
-	fun format(duration: Duration): String {
-
-		val d = Duration.ofNanos(duration.toNanos())
-		var s = ""
-
-		val years = d.seconds / ChronoUnit.YEARS.duration.seconds
-		val months = d.seconds / ChronoUnit.MONTHS.duration.seconds
-		val days = d.toDays()
-		val hours = d.toHours()
-		val minutes = d.toMinutes()
-		val seconds = d.toSeconds()
-
-		val arr = arrayOf(years, months, days, hours, minutes, seconds)
-
-		var i = 0
-		for (l in arr) {
-			if (l != 0L)
-				break
-			else
-				i++
-		}
-
-		while (i < arr.size) {
-			s += when (i) {
-				0 -> "year"
-				1 -> "month"
-				2 -> "day"
-				3 -> "hour"
-				4 -> "minute"
-				5 -> "second"
-				else -> throw IllegalArgumentException("i in format(duration) cannot be > arr.size")
-			}
-			if (arr[i] > 1)
-				s += "s"
-			s += " ${arr[i]}"
-			if (i < 5)
-				s += ", "
-		}
-
-		return s
-
-	}
 
 	@Language("regexp")
 	const val DATE_TIME_REGEX: String =
