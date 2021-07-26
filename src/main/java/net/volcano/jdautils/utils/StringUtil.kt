@@ -60,8 +60,11 @@ fun String.camelCaseToSpaces(): String {
 	return this.replace("([A-Z])".toRegex(), " $1").trim { it <= ' ' }
 }
 
+/**
+ * [len] the maximum length of the string to return
+ */
 fun String.trim(len: Int): String {
-	return if (this.length > len) this.substring(0,len - 1) else this
+	return if (this.length > len) this.substring(0, len) else this
 }
 
 fun String.plural(amount: Int) : String {
