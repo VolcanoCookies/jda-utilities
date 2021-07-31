@@ -8,11 +8,11 @@ import java.util.*
 
 val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-fun Instant.format():String {
+fun Instant.format(): String {
 	return simpleDateFormat.format(Date.from(this))
 }
 
-fun OffsetDateTime.format(): String{
+fun OffsetDateTime.format(): String {
 	return this.toInstant().format()
 }
 
@@ -52,6 +52,7 @@ fun Duration.format(): String {
 		s += " ${arr[i]}"
 		if (i < 5)
 			s += ", "
+		i++
 	}
 
 	return s
@@ -63,7 +64,6 @@ object TimeUtil {
 	fun formatEpoch(epoch: Long?): String {
 		return simpleDateFormat.format(Date.from(Instant.ofEpochMilli(epoch!!)))
 	}
-
 
 	@Language("regexp")
 	const val DATE_TIME_REGEX: String =
