@@ -38,6 +38,7 @@ fun Duration.format(): String {
 	}
 
 	while (i < arr.size) {
+		s += " ${arr[i]} "
 		s += when (i) {
 			0 -> "year"
 			1 -> "month"
@@ -49,7 +50,6 @@ fun Duration.format(): String {
 		}
 		if (arr[i] > 1)
 			s += "s"
-		s += " ${arr[i]}"
 		if (i < 5)
 			s += ", "
 		i++
