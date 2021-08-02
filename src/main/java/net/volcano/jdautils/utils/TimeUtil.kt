@@ -70,6 +70,7 @@ object TimeUtil {
 		"(\\d{4})(?:-(\\d{1,2})(?:-(\\d{1,2})(?: ?(\\d{1,2})(?::(\\d{1,2})(?::(\\d{1,2}))?)?)?)?)?"
 
 	@JvmStatic
+	@Throws(InvalidDateTimeFormatException::class)
 	fun getDateTimeFromString(input: String): OffsetDateTime {
 
 		val dateTimeRegex =
