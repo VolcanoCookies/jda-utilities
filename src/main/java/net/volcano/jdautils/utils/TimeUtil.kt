@@ -22,10 +22,10 @@ fun Duration.format(): String {
 
 	val years = d.seconds / ChronoUnit.YEARS.duration.seconds
 	val months = d.seconds / ChronoUnit.MONTHS.duration.seconds
-	val days = d.toDays()
-	val hours = d.toHours()
-	val minutes = d.toMinutes()
-	val seconds = d.toSeconds()
+	val days = d.toDaysPart().toLong()
+	val hours = d.toHoursPart().toLong()
+	val minutes = d.toMinutesPart().toLong()
+	val seconds = d.toSecondsPart().toLong()
 
 	val arr = arrayOf(years, months, days, hours, minutes, seconds)
 
@@ -38,6 +38,8 @@ fun Duration.format(): String {
 	}
 
 	while (i < arr.size) {
+		if (arr[i] == 0L)
+			continue
 		s += " ${arr[i]} "
 		s += when (i) {
 			0 -> "year"
@@ -48,9 +50,9 @@ fun Duration.format(): String {
 			5 -> "second"
 			else -> throw IllegalArgumentException("i in format(duration) cannot be > arr.size")
 		}
-		if (arr[i] > 1)
+		if (arr[i] > 1L)
 			s += "s"
-		if (i < 5)
+		if (i < 5L)
 			s += ", "
 		i++
 	}
