@@ -1,16 +1,12 @@
 package net.volcano.jdautils.utils
 
-import java.util.concurrent.CompletableFuture
-import java.util.stream.Collectors
-import java.lang.InterruptedException
-import java.util.concurrent.ExecutionException
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
-import net.volcano.jdautils.utils.UserUtil
 import java.util.*
+import java.util.concurrent.ExecutionException
 import java.util.regex.Pattern
 
 object UserUtil {
@@ -28,7 +24,7 @@ object UserUtil {
 		query = query.trim { it <= ' ' }
 
 		// Return the first occurrence of a mention
-		val matcher = Pattern.compile("<@(\\d+)>", Pattern.CASE_INSENSITIVE).matcher(query)
+		val matcher = Pattern.compile("<@!?(\\d+)>", Pattern.CASE_INSENSITIVE).matcher(query)
 		if (matcher.matches()) {
 			try {
 				return jda.retrieveUserById(matcher.group(1))
@@ -155,7 +151,7 @@ fun User.format(): String {
 	return "${this.asTag} [${this.id}]"
 }
 
-fun User.fullString() : String {
+fun User.fullString(): String {
 	return "${this.asTag} [${this.id}] ${this.asMention}"
 }
 
@@ -165,7 +161,7 @@ val User.roles: List<Role>
 			.flatMap { it.roles }
 	}
 
-fun User.retrieveRoles() : List<Role> {
+fun User.retrieveRoles(): List<Role> {
 	return this.mutualGuilds.flatMap {
 		it.retrieveMember(this).submit().get().roles
 	}
