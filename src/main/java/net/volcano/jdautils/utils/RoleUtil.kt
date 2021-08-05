@@ -58,7 +58,7 @@ fun Role.getFullString(): String {
 fun Role.format(forGuild: Guild = this.guild, useMention: Boolean = true, noId: Boolean = false): String {
 	return if (this.guild.idLong == forGuild.idLong) {
 		if (useMention) {
-			this.asMention + " from this guild"
+			this.asMention
 		} else {
 			if (noId) {
 				"${this.name} from this guild"
