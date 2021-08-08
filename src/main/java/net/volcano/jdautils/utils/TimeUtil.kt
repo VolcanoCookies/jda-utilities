@@ -17,44 +17,26 @@ fun OffsetDateTime.format(): String {
 }
 
 fun Duration.format(): String {
-	val d = Duration.ofNanos(this.toNanos())
+
+	val years = this.seconds / ChronoUnit.YEARS.duration.seconds
+	val days = this.toDaysPart() % 365
+	val hours = this.toHoursPart()
+	val minutes = this.toMinutesPart()
+	val seconds = this.toSecondsPart()
+	val millis = this.toMillisPart()
+
 	var s = ""
 
-	val years = d.seconds / ChronoUnit.YEARS.duration.seconds
-	val months = d.seconds / ChronoUnit.MONTHS.duration.seconds
-	val days = d.toDaysPart().toLong()
-	val hours = d.toHoursPart().toLong()
-	val minutes = d.toMinutesPart().toLong()
-	val seconds = d.toSecondsPart().toLong()
+	if (years != 0L)
+		s += "${years}y "
 
-	val arr = arrayOf(years, months, days, hours, minutes, seconds)
+	if (days != 0L)
+		s += "${days}d "
 
-	var i = 0
-	for (l in arr) {
-		if (l != 0L)
-			break
-		else
-			i++
-	}
-
-	while (i < arr.size) {
-		if (arr[i] == 0L)
-			continue
-		s += " ${arr[i]} "
-		s += when (i) {
-			0 -> "year"
-			1 -> "month"
-			2 -> "day"
-			3 -> "hour"
-			4 -> "minute"
-			5 -> "second"
-			else -> throw IllegalArgumentException("i in format(duration) cannot be > arr.size")
-		}
-		if (arr[i] > 1L)
-			s += "s"
-		if (i < 5L)
-			s += ", "
-		i++
+	if (hours + minutes + seconds != 0) {
+		s += "${hours}:${minutes}:${seconds}"
+		if (millis != 0)
+			s += ".$millis"
 	}
 
 	return s
