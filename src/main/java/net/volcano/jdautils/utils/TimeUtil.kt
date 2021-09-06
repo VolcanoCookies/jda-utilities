@@ -33,8 +33,12 @@ fun Duration.format(): String {
 	if (days != 0L)
 		s += "${days}d "
 
+	fun addZero(n: Int): String {
+		return if (n < 10) "0$n" else "$n";
+	}
+
 	if (hours + minutes + seconds != 0) {
-		s += "${hours}:${minutes}:${seconds}"
+		s += "${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}"
 		if (millis != 0)
 			s += ".$millis"
 	}
