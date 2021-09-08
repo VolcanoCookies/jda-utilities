@@ -98,3 +98,22 @@ val KType.componentType: KClass<*>?
 			}
 		} else null
 	}
+
+val KClass<*>.isEnum: Boolean
+	get() = this.isSubclassOf(Enum::class)
+
+val KClass<*>.isPrimitive: Boolean
+	get() = this.primitive != null
+
+val KClass<*>.primitive: KClass<*>?
+	get() = this.javaPrimitiveType?.kotlin
+
+val KType.kClass: KClass<*>
+	get() = this.classifier!! as KClass<*>
+
+val KType.isPrimitive: Boolean
+	get() = this.kClass.isPrimitive
+
+val KType.isEnum: Boolean
+	get() = this.kClass.isEnum
+
