@@ -56,18 +56,6 @@ object ClassUtil {
 	}
 }
 
-val KType.isEnum: Boolean
-	get() {
-		return if (this.isArray) {
-			this.componentType?.java?.isEnum
-		} else {
-			this.classifier?.let { c ->
-				(c as KClass<*>).isSubclassOf(Enum::class)
-			}
-		} ?: false
-
-	}
-
 val KType.enumConstants: Array<out Enum<*>>?
 	get() {
 		return if (this.isEnum) {
