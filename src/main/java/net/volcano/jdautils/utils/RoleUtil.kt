@@ -9,7 +9,7 @@ object RoleUtil {
 
 	@JvmStatic
 	fun findRole(query: String?, jda: JDA, guild: Guild?): Role? {
-		var query = query ?: return null
+		var query = query?.lowercase() ?: return null
 		query = query.trim { it <= ' ' }
 
 		// Try getting a role from the pure discord id if its numerical
