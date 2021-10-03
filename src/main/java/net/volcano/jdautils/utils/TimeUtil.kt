@@ -16,7 +16,9 @@ fun OffsetDateTime.format(): String {
 	return this.toInstant().format()
 }
 
-fun Duration.format(): String {
+fun Duration.formatTrimmed(): String = this.format(true)
+
+fun Duration.format(trim: Boolean = true): String {
 
 	val years = this.seconds / ChronoUnit.YEARS.duration.seconds
 	val days = this.toDaysPart() % 365
@@ -37,13 +39,14 @@ fun Duration.format(): String {
 		return if (n < 10) "0$n" else "$n";
 	}
 
-	if (hours + minutes + seconds + millis != 0) {
+	if (hours + minutes + seconds + millis > 0) {
 		s += "${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}"
 		if (millis != 0)
 			s += ".$millis"
 	}
 
-	return s
+	return if (trim) s.trimStart { it == ' ' || it == ':' || it == '.' || it == '0' }
+	else s
 }
 
 object TimeUtil {
