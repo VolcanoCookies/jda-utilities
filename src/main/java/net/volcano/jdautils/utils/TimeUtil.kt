@@ -37,7 +37,7 @@ fun Duration.format(): String {
 		return if (n < 10) "0$n" else "$n";
 	}
 
-	if (hours + minutes + seconds != 0) {
+	if (hours + minutes + seconds + millis != 0) {
 		s += "${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}"
 		if (millis != 0)
 			s += ".$millis"
