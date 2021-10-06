@@ -92,7 +92,7 @@
     <distributionManagement>
         <repository>
             <id>collective-external</id>
-            <name>Collective Extenal</name>
+            <name>Collective External</name>
             <url>https://archiva.centralmind.net/repository/collective-external/</url>
         </repository>
     </distributionManagement>
