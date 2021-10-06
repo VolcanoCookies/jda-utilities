@@ -91,9 +91,9 @@
 
     <distributionManagement>
         <repository>
-            <id>collective-internal</id>
-            <name>Collective Internal</name>
-            <url>https://archiva.centralmind.net/repository/collective-internal</url>
+            <id>collective-external</id>
+            <name>Collective Extenal</name>
+            <url>https://archiva.centralmind.net/repository/collective-external/</url>
         </repository>
     </distributionManagement>
 
