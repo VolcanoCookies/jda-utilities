@@ -88,6 +88,15 @@
         </plugins>
     </build>
 
+
+    <distributionManagement>
+        <repository>
+            <id>collective-internal</id>
+            <name>Collective Internal</name>
+            <url>https://archiva.centralmind.net/repository/collective-internal</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>dv8tion</id>
