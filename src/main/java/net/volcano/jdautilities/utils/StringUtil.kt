@@ -1,6 +1,6 @@
 package net.volcano.jdautilities.utils
 
-
+import net.dv8tion.jda.api.JDA
 
 /**
  * Split a string into multiple strings, trying to split at the provided string
@@ -52,7 +52,7 @@ fun String.capitalizeFirst(): String {
 	return this.replaceFirstChar { it.uppercaseChar() }
 }
 
-fun String.capitalize() : String {
+fun String.capitalize(): String {
 	return this.lowercase().capitalizeFirst()
 }
 
@@ -67,15 +67,15 @@ fun String.trim(len: Int): String {
 	return if (this.length > len) this.substring(0, len) else this
 }
 
-fun String.plural(amount: Int) : String {
-	return if (this.endsWith("s"))  {
+fun String.plural(amount: Int): String {
+	return if (this.endsWith("s")) {
 		if (amount == 1) {
 			this.substringBeforeLast("s")
 		} else {
 			this
 		}
 	} else {
-		if ( amount == 1) {
+		if (amount == 1) {
 			this
 		} else {
 			this + "s"
@@ -84,5 +84,16 @@ fun String.plural(amount: Int) : String {
 }
 
 fun String.plural(l: Collection<*>): String {
-	return this.plural(l.size	)
+	return this.plural(l.size)
+}
+
+/**
+ * Convert mentions like '<@182890528768000002>' to tags like 'Volcano#2343'.
+ * @receiver String
+ */
+fun String.mentionToTag(jda: JDA): String {
+	return this.replace(Regex("<@(\\d+)>")) {
+		val id = it.groupValues[1]
+		jda.getUserById(id)?.asTag ?: it.value
+	}
 }
