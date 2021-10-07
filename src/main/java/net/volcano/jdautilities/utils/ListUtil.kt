@@ -1,4 +1,4 @@
-package net.volcano.jdautils.utils
+package net.volcano.jdautilities.utils
 
 fun <T> Iterable<T>.asString(separator: String, maxLen: Int, func: (T) -> String): List<String> {
 	if (this.count() == 0)

@@ -1,4 +1,4 @@
-package net.volcano.jdautils.utils
+package net.volcano.jdautilities.utils
 
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild

@@ -1,4 +1,4 @@
-package net.volcano.jdautils.constants
+package net.volcano.jdautilities.constants
 
 const val SELECTION_OPTION_LABEL_LIMIT: Int = 25
 const val SELECTION_OPTION_VALUE_LIMIT: Int = 100

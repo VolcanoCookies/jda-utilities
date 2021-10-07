@@ -1,4 +1,4 @@
-package net.volcano.jdautils;
+package net.volcano.jdautilities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

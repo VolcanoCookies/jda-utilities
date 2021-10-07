@@ -1,4 +1,4 @@
-package net.volcano.jdautils.utils
+package net.volcano.jdautilities.utils
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type

@@ -1,4 +1,4 @@
-package net.volcano.jdautils.constants;
+package net.volcano.jdautilities.constants;
 
 public class Reactions {
 	

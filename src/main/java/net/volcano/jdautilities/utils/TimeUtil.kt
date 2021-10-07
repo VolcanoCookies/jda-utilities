@@ -1,4 +1,4 @@
-package net.volcano.jdautils.utils
+package net.volcano.jdautilities.utils
 
 import org.intellij.lang.annotations.Language
 import java.text.SimpleDateFormat
