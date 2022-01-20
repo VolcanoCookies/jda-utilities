@@ -49,6 +49,24 @@ fun Duration.format(trim: Boolean = true): String {
 	else s
 }
 
+/**
+ * Return true if the instant is in the future from now
+ * @receiver Instant
+ * @return Boolean
+ */
+fun Instant.inFuture(): Boolean {
+	return this > Instant.now()
+}
+
+/**
+ * Return true if the instant is in the past
+ * @receiver Instant
+ * @return Boolean
+ */
+fun Instant.isPast() : Boolean {
+	return !inFuture()
+}
+
 object TimeUtil {
 
 	@JvmStatic
