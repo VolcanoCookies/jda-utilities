@@ -94,6 +94,6 @@ fun String.plural(l: Collection<*>): String {
 fun String.mentionToTag(jda: JDA): String {
 	return this.replace(Regex("<@(\\d+)>")) {
 		val id = it.groupValues[1]
-		jda.getUserById(id)?.asTag ?: it.value
+		jda.getUserById(id)?.name ?: it.value
 	}
 }

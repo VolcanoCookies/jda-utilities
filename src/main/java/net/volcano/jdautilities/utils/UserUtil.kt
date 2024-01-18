@@ -96,7 +96,7 @@ object UserUtil {
 				}
 
 				// Try tag
-				val tag = member.user.asTag
+				val tag = member.user.name
 				// Can't have a better match than 100%, so return
 				if (tag.equals(query, ignoreCase = true)) {
 					return member.user
@@ -148,11 +148,11 @@ object UserUtil {
 }
 
 fun User.format(): String {
-	return "${this.asTag} [${this.id}]"
+	return "${this.name} [${this.id}]"
 }
 
 fun User.fullString(): String {
-	return "${this.asTag} [${this.id}] ${this.asMention}"
+	return "${this.name} [${this.id}] ${this.asMention}"
 }
 
 val User.roles: List<Role>

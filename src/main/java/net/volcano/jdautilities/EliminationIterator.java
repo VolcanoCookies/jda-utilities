@@ -1,4 +1,4 @@
-package net.volcano.jdautils;
+package net.volcano.jdautilities;
 
 import java.util.Arrays;
 import java.util.Iterator;
